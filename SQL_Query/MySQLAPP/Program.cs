@@ -23,10 +23,19 @@ namespace MySQLAPP
             //    new Animal() { Name = "дятел", Type = "bird" }
             //};
             //query.AddRange(list);
-            foreach(var item in query.GetAll())
-            {
-                Console.WriteLine(item);    
-            }
+            //foreach(var item in query.GetAll())
+            //{
+            //    Console.WriteLine(item);    
+            //}
+            //Console.WriteLine(query.GetByName("дятел"));
+            //foreach (var item in query.GetByType("млекопетающие"))
+            //{
+            //    Console.WriteLine(item);
+            //}
+            //Console.WriteLine(query.DeleteByName("дятел"));
+            //Console.WriteLine(query.DeleteByName("дятел"));
+            Console.WriteLine(query.UpdateById(10, "нетядел", "птица"));
+            Console.ReadKey();
         }
     }
 }

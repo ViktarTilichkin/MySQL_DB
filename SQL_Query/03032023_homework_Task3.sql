@@ -1,0 +1,14 @@
+CREATE DATABASE IF NOT EXISTS STUDIES;
+
+USE STUDIES;
+
+CREATE TABLE USER(
+	ID INT auto_increment NOT NULL,
+    `Name` VARCHAR(20) NOT NULL,
+    `PASSWORD` VARCHAR(20) NOT NULL,
+    EMAIL VARCHAR(20) UNIQUE,
+     LastLogin DateTime,
+     Money DOUBLE DEFAULT 0,
+    primary key(ID)
+    );
+
