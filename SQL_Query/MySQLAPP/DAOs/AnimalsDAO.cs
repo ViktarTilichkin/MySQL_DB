@@ -14,8 +14,9 @@ namespace MySQLAPP.DAOs
     {
         private readonly string ConnectionString = "server=localhost;database=STUDIES;uid=root;password=123456;";
         private readonly string SQL_insertItem = "insert into animals(`name`, `type`) values {0};";
-        private readonly string SQL_selectItem = "select id, `name`, `type` from animals;";
-        private readonly string SQL_selectOneItem = "SELECT * FROM animals where {0};";
+        private const  string SQL_selectItems = "select id, `name`, `type` from animals";
+        // private readonly string SQL_selectOneItem = "SELECT * FROM animals where {0};";
+        private readonly string SQL_selectOneItem = $"{SQL_selectItems} where {{0}} = {{1}};";
         private readonly string SQL_deleteItem = "delete from animals where {0};";
         private readonly string SQL_updateItem = "update animals set name = '{1}' , type = '{2}' where id = {0};";
         public int Add(Animal animal)
@@ -81,7 +82,7 @@ namespace MySQLAPP.DAOs
             if (connection == null) throw new Exception("connection error");
             try
             {
-                MySqlCommand command = new MySqlCommand(SQL_selectItem, connection);
+                MySqlCommand command = new MySqlCommand(SQL_selectItems, connection);
                 MySqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
@@ -110,8 +111,10 @@ namespace MySQLAPP.DAOs
             if (connection == null) throw new Exception("connection error");
             try
             {
-                Console.WriteLine(string.Format(SQL_selectOneItem, $"'name' = '{name}'"));
-                MySqlCommand command = new MySqlCommand(string.Format(SQL_selectOneItem, $"name = '{name}'"), connection);
+                Console.WriteLine(string.Format(SQL_selectOneItem, "name" , "@name"));
+                
+                MySqlCommand command = new MySqlCommand(string.Format(SQL_selectOneItem, "name", "@name"), connection);
+                command.Parameters.AddWithValue($"@name", name);
                 MySqlDataReader reader = command.ExecuteReader();
                 reader.Read();
                 animal.ID = reader.GetInt32(0);
@@ -158,16 +161,15 @@ namespace MySQLAPP.DAOs
                 connection.Close();
             }
         }
-        public bool DeleteByName(string type)
+        public bool DeleteByName(string name)
         {
             MySqlConnection connection = Connection();
             if (connection == null) throw new Exception("connection error");
             try
             {
-                MySqlCommand command = new MySqlCommand(string.Format(SQL_deleteItem, $"name = '{type}'"), connection);
+                MySqlCommand command = new MySqlCommand(string.Format(SQL_deleteItem, $"name = '{name}'"), connection);
                 MySqlDataReader reader = command.ExecuteReader();
-                if (reader.HasRows) return true; // как узнать что тру?
-                return false;
+                return true;
             }
             catch (MySqlException ex)
             {
