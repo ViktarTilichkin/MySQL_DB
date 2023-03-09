@@ -1,4 +1,6 @@
-﻿using MySQLAPP.DAOs;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using MySQLAPP.DAOs;
 using MySQLAPP.Models;
 using System.ComponentModel;
 using System.Xml.Linq;
@@ -9,7 +11,7 @@ namespace MySQLAPP
     {
         static void Main(string[] args)
         {
-
+            
             AnimalsDAO query = new AnimalsDAO();
             //Animal animal = new Animal() { Name = "orel", Type = "bird" };
             //Console.WriteLine(query.Add(animal));
@@ -32,10 +34,12 @@ namespace MySQLAPP
             //{
             //    Console.WriteLine(item);
             //}
-            //Console.WriteLine(query.DeleteByName("дятел"));
-            //Console.WriteLine(query.DeleteByName("дятел"));
-            Console.WriteLine(query.UpdateById(10, "нетядел", "птица"));
+            Console.WriteLine(query.DeleteByName("дятел"));
+            Console.WriteLine(query.DeleteByName("дятел"));
+            //Console.WriteLine(query.UpdateById(10, "нетядел", "птица"));
+            //CreateHostBuilder(args).Build().Run();
             Console.ReadKey();
         }
+
     }
 }

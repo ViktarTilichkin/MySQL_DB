@@ -17,7 +17,7 @@ namespace MySQLAPP.Models
         public DateTime TimeTo { get; set; }
         public override string ToString()
         {
-            return $" Id: {ID}  Name: {Name} Type: {Type}";
+            return $" Id: {ID}  Name: {Name} Type: ";
         }
     }
 }

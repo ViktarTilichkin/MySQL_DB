@@ -1,9 +1,12 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Microsoft.Extensions.Configuration;
+using MySql.Data.MySqlClient;
 using MySQLAPP.Models;
 using Mysqlx.Crud;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -12,9 +15,31 @@ namespace MySQLAPP.DAOs
 {
     public class AnimalsDAO
     {
-        private readonly string ConnectionString = "server=localhost;database=STUDIES;uid=root;password=123456;";
-        private readonly string SQL_insertItem = "insert into animals(`name`, `type`) values {0};";
-        private const  string SQL_selectItems = "select id, `name`, `type` from animals";
+        private string? _connectionString;
+        public string ConnectionString
+        {
+            get
+            {
+                //if (_connectionString is null)
+                //{
+                //    _connectionString = new ConfigurationBuilder().AddJsonFile("appsettings.json", optional: true, reloadOnChange: true).Build().GetConnectionString("MyDatabase");
+                //}
+                //_connectionString = _connectionString is null ? 
+                //    new ConfigurationBuilder()
+                //    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                //    .Build().GetConnectionString("MyDatabase") 
+                //    : _connectionString;
+                //_connectionString ??= new ConfigurationBuilder()
+                //    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                //    .Build().GetConnectionString("MyDatabase");
+                //return _connectionString;
+                return _connectionString ??= new ConfigurationBuilder()
+                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                    .Build().GetConnectionString("MyDatabase");
+            }
+        }
+        private readonly string SQL_insertItem = "insert into animals(`name`, `type`) values (@name, @type);";
+        private const string SQL_selectItems = "select id, `name`, `type` from animals";
         // private readonly string SQL_selectOneItem = "SELECT * FROM animals where {0};";
         private readonly string SQL_selectOneItem = $"{SQL_selectItems} where {{0}} = {{1}};";
         private readonly string SQL_deleteItem = "delete from animals where {0};";
@@ -27,9 +52,9 @@ namespace MySQLAPP.DAOs
             if (connection == null) throw new Exception("connection error");
             try
             {
-                MySqlCommand command = new MySqlCommand(string.Format(SQL_insertItem, "(@name0, @type0)"), connection);
-                command.Parameters.AddWithValue("@name0", animal.Name);
-                command.Parameters.AddWithValue("@type0", animal.Type);
+                MySqlCommand command = new MySqlCommand(SQL_insertItem, connection);
+                command.Parameters.AddWithValue("@name", animal.Name);
+                command.Parameters.AddWithValue("@type", animal.Type);
                 command.ExecuteNonQuery();
                 return (int)command.LastInsertedId;
             }
@@ -111,8 +136,8 @@ namespace MySQLAPP.DAOs
             if (connection == null) throw new Exception("connection error");
             try
             {
-                Console.WriteLine(string.Format(SQL_selectOneItem, "name" , "@name"));
-                
+                Console.WriteLine(string.Format(SQL_selectOneItem, "name", "@name"));
+
                 MySqlCommand command = new MySqlCommand(string.Format(SQL_selectOneItem, "name", "@name"), connection);
                 command.Parameters.AddWithValue($"@name", name);
                 MySqlDataReader reader = command.ExecuteReader();
