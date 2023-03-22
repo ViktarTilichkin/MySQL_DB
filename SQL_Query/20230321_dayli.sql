@@ -157,18 +157,70 @@ select m.title, Round(AVG(s.Salary),0) as AVG_SALARY from worker w
 -- 20.Отобразите тех сотрудников, зарплата которых выше средней каждого месяца в
 -- отсортированном порядке
 
-
+select w.*, s.salary from worker w
+	inner join salary s
+    on s.Worker_id = w.id
+    inner join month m
+    on s.Month_id = m.id 
+    group by m.title
+    having salary >
+    (select AVG(s.Salary)from worker w
+	inner join salary s
+    on s.Worker_id = w.id
+    inner join month m
+    on s.Month_id = m.id 
+    group by m.title);
 
 -- 21. Вычислите максимальную и минимальную зарплаты каждого сотрудника.
 -- Отобразите те, которые выше 2000 в отсортированном порядке
 
+select w.* , MIN(s.Salary), MAX(s.salary) from worker w
+	inner join salary s 
+    on s.Worker_id = w.id
+    group by w.id
+    having MIN(s.Salary) > 2000;
+
 -- 22. Выведите месяц, в котором компания выдала наибольшую сумму зарплат за месяц
 
+select m.title, avg(s.salary) from worker w
+	inner join salary s
+    on s.Worker_id = w.id
+    inner join month m
+    on s.Month_id = m.id 
+    group by m.title
+    order by avg(s.salary) DESC
+    limit 1;
+
 -- 23. Выведите 5 уникальных фамилий в алфавитном порядке
+
+select distinct lastname from worker
+	order by lastname asc
+	limit 5;
 
 -- 24.В каждом приведенном месяце выведите ту зарплату и сотрудника, зарплата
 -- которого выше остальных. Учитывать только тех сотрудников, возраст которых
 -- выше 20
 
+select w.*, s.salary   from worker w
+	inner join salary s
+    on s.Worker_id = w.id
+    inner join month m
+    on s.Month_id = m.id;
+    
+select w.* , MAX(s.salary)  from worker w
+	inner join salary s
+    on s.Worker_id = w.id
+    inner join month m
+    on s.Month_id = m.id
+    group by m.title
+    having MAX(salary);
 
 -- 25. Очистите и удалите все таблицы
+
+truncate table salary;
+truncate table month;
+truncate table worker;
+
+drop table saalry;
+drop table month;
+drop table worker;
