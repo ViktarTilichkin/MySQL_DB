@@ -154,22 +154,21 @@ select m.title, Round(AVG(s.Salary),0) as AVG_SALARY from worker w
     on s.Month_id = m.id 
     group by m.title;
     
--- 20.Отобразите тех сотрудников, зарплата которых выше средней каждого месяца в
+-- 20. Отобразите тех сотрудников, зарплата которых выше средней каждого месяца в
 -- отсортированном порядке
 
-select w.*, s.salary from worker w
+select w.*, s.salary, s.month_id from worker w
 	inner join salary s
     on s.Worker_id = w.id
+    where s.salary > (select Round(AVG(sp.Salary),0) from worker w
+	inner join salary sp
+    on sp.Worker_id = w.id
     inner join month m
-    on s.Month_id = m.id 
-    group by m.title
-    having salary >
-    (select AVG(s.Salary)from worker w
-	inner join salary s
-    on s.Worker_id = w.id
-    inner join month m
-    on s.Month_id = m.id 
-    group by m.title);
+    on sp.Month_id = m.id 
+    group by m.id
+    having m.id = s.month_id)
+    order by s.salary;
+
 
 -- 21. Вычислите максимальную и минимальную зарплаты каждого сотрудника.
 -- Отобразите те, которые выше 2000 в отсортированном порядке
