@@ -92,7 +92,7 @@ namespace MySQLAPP.DAOs
             }
             catch (MySqlException ex)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine(ex);     
                 throw ex;
             }
             finally
