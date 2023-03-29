@@ -113,6 +113,7 @@ select * from boxoffice;
 
 delete from movies where id = 1;
 
+
 -- 20.Найдите domestic and international sales для каждого фильма 
 
 Select title, domestic_sales, internation_sales from movies 
