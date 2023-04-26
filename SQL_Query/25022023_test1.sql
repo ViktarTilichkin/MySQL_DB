@@ -18,5 +18,5 @@ create table TableTime(
 Alter table TableTime add Name varchar(20), add Count int;
 
 alter table TableTime drop Count;
-
+drop table Tabletime;
 drop table Tabletime;
